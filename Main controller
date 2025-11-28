@@ -1,0 +1,503 @@
+local v1 = game
+local v2 = v1:GetService("Players")
+local v3 = v1:GetService("RunService")
+local v4 = v1:GetService("UserInputService")
+local v5 = v2.LocalPlayer
+local v6 = v5.Character or v5.CharacterAdded:Wait()
+local v7 = v6:WaitForChild("HumanoidRootPart")
+local v8 = v6:WaitForChild("Humanoid")
+local v9 = workspace
+local v10 = math
+local v11 = table
+local v12 = Vector3
+local v13 = CFrame
+local v14 = Instance
+local v15 = string
+local v16 = tonumber
+local v17 = tostring
+local v18 = pairs
+local v19 = ipairs
+local v20 = pcall
+local v21 = spawn
+local v22 = wait
+local v23 = tick
+local v24 = type
+local v25 = setmetatable
+local v26 = getmetatable
+local v27 = Color3
+local v28 = UDim2
+local v29 = Enum
+
+_G.OBJ = {}
+_G.OBJ.PARTS = {}
+_G.OBJ.ACTIVE = {}
+_G.OBJ.CONFIG = {}
+_G.OBJ.CACHE = {}
+_G.OBJ.META = {}
+_G.OBJ.ENV = {}
+
+local v30, v31 = v20(function()
+    return loadstring(v1:HttpGet('https://sirius.menu/rayfield'))()
+end)
+
+if not v30 then
+    v20(function()
+        v31 = loadstring(v1:HttpGet('https://raw.githubusercontent.com/shlexware/Rayfield/main/source'))()
+    end)
+end
+
+if not v31 then
+    warn("Failed to load (I really don't know) Rayfield UI library")
+    return
+end
+
+local v32 = v31
+
+local v33 = v32:CreateWindow({
+    Name = "Part control Basic V1",
+    LoadingTitle = "Just a part",
+    LoadingSubtitle = "by dashalostacc",
+    ConfigurationSaving = {
+        Enabled = true,
+        FolderName = nil,
+        FileName = "PartControllerConfig"
+    },
+    Discord = {
+        Enabled = false,
+        Invite = "noinvite",
+        RememberJoins = true
+    },
+    KeySystem = false
+})
+
+_G.OBJ.WINDOW = v33
+
+local v34 = v33:CreateTab("Main Controls", 4483362458)
+local v35 = v33:CreateTab("Manipulation", 4483362458)
+local v36 = v33:CreateTab("Advanced", 4483362458)
+local v37 = v33:CreateTab("Configuration", 4483362458)
+
+_G.OBJ.TABS = {v34, v35, v36, v37}
+
+local v38 = {}
+local v39 = false
+local v40 = false
+local v41 = false
+local v42 = false
+local v43 = false
+local v44 = 50
+local v45 = 100
+local v46 = 10
+local v47 = 0
+local v48 = false
+local v49 = false
+local v50 = nil
+
+local function v51()
+    local v52 = {}
+    local v53 = 0
+    for v54, v55 in v18(v9:GetDescendants()) do
+        if v55:IsA("BasePart") and not v55.Anchored and v55.Parent ~= v6 then
+            v53 = v53 + 1
+            if v53 % 10 == 0 then
+                v3.Heartbeat:Wait()
+            end
+            v11.insert(v52, v55)
+        end
+    end
+    return v52
+end
+
+local function v56(v57, v58)
+    if not v57 or not v57.Position then
+        return v10.huge
+    end
+    local v59 = (v57.Position - v58).Magnitude
+    return v59
+end
+
+local function v60(v61, v62, v63)
+    if not v61 or not v61.Parent then return end
+    v20(function()
+        local v64 = v61:FindFirstChildOfClass("BodyVelocity")
+        if not v64 then
+            v64 = v14.new("BodyVelocity")
+            v64.MaxForce = v12.new(v10.huge, v10.huge, v10.huge)
+            v64.Parent = v61
+        end
+        v64.Velocity = v62 * v63
+    end)
+end
+
+local function v65(v66)
+    if not v66 or not v66.Parent then return end
+    v20(function()
+        local v67 = v66:FindFirstChildOfClass("BodyVelocity")
+        if v67 then
+            v67:Destroy()
+        end
+    end)
+end
+
+local function v68()
+    local v69 = v51()
+    _G.OBJ.PARTS = v69
+    return #v69
+end
+
+_G.OBJ.REFRESH = v68
+
+local function v70()
+    while v39 do
+        local v71 = _G.OBJ.PARTS
+        local v72 = 0
+        for v73, v74 in v18(v71) do
+            if v74 and v74.Parent then
+                local v75 = v56(v74, v7.Position)
+                if v75 <= v44 then
+                    v72 = v72 + 1
+                    if v72 % 5 == 0 then
+                        v3.Heartbeat:Wait()
+                    end
+                    local v76 = (v7.Position - v74.Position).Unit
+                    v60(v74, v76, v45)
+                end
+            end
+        end
+        v3.Heartbeat:Wait()
+    end
+end
+
+local function v77()
+    while v40 do
+        local v78 = _G.OBJ.PARTS
+        local v79 = 0
+        for v80, v81 in v18(v78) do
+            if v81 and v81.Parent then
+                local v82 = v56(v81, v7.Position)
+                if v82 <= v44 then
+                    v79 = v79 + 1
+                    if v79 % 5 == 0 then
+                        v3.Heartbeat:Wait()
+                    end
+                    local v83 = (v81.Position - v7.Position).Unit
+                    v60(v81, v83, v45)
+                end
+            end
+        end
+        v3.Heartbeat:Wait()
+    end
+end
+
+local function v84()
+    while v41 do
+        local v85 = _G.OBJ.PARTS
+        local v86 = 0
+        local v87 = v23()
+        for v88, v89 in v18(v85) do
+            if v89 and v89.Parent then
+                local v90 = v56(v89, v7.Position)
+                if v90 <= v44 then
+                    v86 = v86 + 1
+                    if v86 % 5 == 0 then
+                        v3.Heartbeat:Wait()
+                    end
+                    local v91 = v7.Position + v12.new(0, v46, 0)
+                    local v92 = v13.new(v89.Position, v91)
+                    local v93 = v13.Angles(0, v87 * 2, 0)
+                    local v94 = v92 * v93 * v13.new(v10.sin(v87) * 10, 0, v10.cos(v87) * 10)
+                    v60(v89, (v94.Position - v89.Position).Unit, v45 * 0.5)
+                end
+            end
+        end
+        v3.Heartbeat:Wait()
+    end
+end
+
+local function v95()
+    while v42 do
+        local v96 = _G.OBJ.PARTS
+        local v97 = 0
+        local v98 = v23()
+        for v99, v100 in v18(v96) do
+            if v100 and v100.Parent then
+                local v101 = v56(v100, v7.Position)
+                if v101 <= v44 then
+                    v97 = v97 + 1
+                    if v97 % 3 == 0 then
+                        v3.Heartbeat:Wait()
+                    end
+                    local v102 = v7.Position + v12.new(v10.sin(v98 + v99) * v46, 0, v10.cos(v98 + v99) * v46)
+                    v20(function()
+                        v100.CFrame = v13.new(v102)
+                    end)
+                end
+            end
+        end
+        v3.Heartbeat:Wait()
+    end
+end
+
+local function v103(v104)
+    if not v104 or not v104.Character then return end
+    local v105 = v104.Character:FindFirstChild("HumanoidRootPart")
+    if not v105 then return end
+    
+    local v106 = _G.OBJ.PARTS
+    local v107 = 0
+    for v108, v109 in v18(v106) do
+        if v109 and v109.Parent then
+            v107 = v107 + 1
+            if v107 % 10 == 0 then
+                v3.Heartbeat:Wait()
+            end
+            v20(function()
+                v109.CFrame = v105.CFrame
+            end)
+        end
+    end
+end
+
+local function v110()
+    for v111, v112 in v18(_G.OBJ.PARTS) do
+        if v112 and v112.Parent then
+            v65(v112)
+        end
+    end
+end
+
+v34:CreateSection("Part Detection System")
+
+local v113 = v34:CreateLabel("Parts Found: 0")
+
+local v114 = v34:CreateButton({
+    Name = "Scan For Unanchored Parts",
+    Callback = function()
+        local v115 = v68()
+        v113:Set("Parts Found: " .. v17(v115))
+        v32:Notify({
+            Title = "Scan Complete",
+            Content = "Found " .. v17(v115) .. " unanchored parts",
+            Duration = 3,
+            Image = 4483362458
+        })
+    end
+})
+
+v34:CreateSection("Quick Actions")
+
+local v116 = v34:CreateButton({
+    Name = "Clear All Velocities",
+    Callback = function()
+        v110()
+        v32:Notify({
+            Title = "Cleared",
+            Content = "All part velocities have been cleared",
+            Duration = 2,
+            Image = 4483362458
+        })
+    end
+})
+
+v35:CreateSection("Basic Manipulation Modes")
+
+local v117 = v35:CreateToggle({
+    Name = "Magnet Mode (Pull)",
+    CurrentValue = false,
+    Flag = "MagnetToggle",
+    Callback = function(v118)
+        v39 = v118
+        if v118 then
+            v40 = false
+            v41 = false
+            v42 = false
+            v21(v70)
+        else
+            v110()
+        end
+    end
+})
+
+local v119 = v35:CreateToggle({
+    Name = "Push Mode (Repel)",
+    CurrentValue = false,
+    Flag = "PushToggle",
+    Callback = function(v120)
+        v40 = v120
+        if v120 then
+            v39 = false
+            v41 = false
+            v42 = false
+            v21(v77)
+        else
+            v110()
+        end
+    end
+})
+
+local v121 = v35:CreateToggle({
+    Name = "Tornado Mode (Spiral)",
+    CurrentValue = false,
+    Flag = "TornadoToggle",
+    Callback = function(v122)
+        v41 = v122
+        if v122 then
+            v39 = false
+            v40 = false
+            v42 = false
+            v21(v84)
+        else
+            v110()
+        end
+    end
+})
+
+local v123 = v35:CreateToggle({
+    Name = "Ring Mode (Circle)",
+    CurrentValue = false,
+    Flag = "RingToggle",
+    Callback = function(v124)
+        v42 = v124
+        if v124 then
+            v39 = false
+            v40 = false
+            v41 = false
+            v21(v95)
+        else
+            v110()
+        end
+    end
+})
+
+v36:CreateSection("Advanced Targeting")
+
+local v125 = v36:CreateDropdown({
+    Name = "Target Player",
+    Options = {},
+    CurrentOption = {},
+    MultipleOptions = false,
+    Flag = "PlayerDropdown",
+    Callback = function(v126)
+        v50 = v126
+    end
+})
+
+local function v127()
+    local v128 = {}
+    for v129, v130 in v18(v2:GetPlayers()) do
+        if v130 ~= v5 then
+            v11.insert(v128, v130.Name)
+        end
+    end
+    v125:Refresh(v128)
+end
+
+v127()
+
+v2.PlayerAdded:Connect(function()
+    v22(1)
+    v127()
+end)
+
+v2.PlayerRemoving:Connect(function()
+    v22(1)
+    v127()
+end)
+
+local v131 = v36:CreateButton({
+    Name = "Send Parts To Target",
+    Callback = function()
+        if v50 then
+            local v132 = v2:FindFirstChild(v50)
+            if v132 then
+                v103(v132)
+                v32:Notify({
+                    Title = "Sent",
+                    Content = "Parts sent to " .. v50,
+                    Duration = 2,
+                    Image = 4483362458
+                })
+            end
+        end
+    end
+})
+
+v37:CreateSection("Performance Configuration")
+
+local v133 = v37:CreateSlider({
+    Name = "Range",
+    Range = {10, 200},
+    Increment = 5,
+    Suffix = " studs",
+    CurrentValue = 50,
+    Flag = "RangeSlider",
+    Callback = function(v134)
+        v44 = v134
+    end
+})
+
+local v135 = v37:CreateSlider({
+    Name = "Power",
+    Range = {10, 500},
+    Increment = 10,
+    Suffix = " force",
+    CurrentValue = 100,
+    Flag = "PowerSlider",
+    Callback = function(v136)
+        v45 = v136
+    end
+})
+
+local v137 = v37:CreateSlider({
+    Name = "Height",
+    Range = {5, 50},
+    Increment = 1,
+    Suffix = " studs",
+    CurrentValue = 10,
+    Flag = "HeightSlider",
+    Callback = function(v138)
+        v46 = v138
+    end
+})
+
+local v139 = v37:CreateToggle({
+    Name = "Auto Refresh Parts",
+    CurrentValue = false,
+    Flag = "AutoRefresh",
+    Callback = function(v140)
+        v48 = v140
+        if v140 then
+            v21(function()
+                while v48 do
+                    v22(5)
+                    local v141 = v68()
+                    v113:Set("Parts Found: " .. v17(v141))
+                end
+            end)
+        end
+    end
+})
+
+v32:LoadConfiguration()
+
+v5.CharacterAdded:Connect(function(v142)
+    v22(1)
+    v6 = v142
+    v7 = v142:WaitForChild("HumanoidRootPart")
+    v8 = v142:WaitForChild("Humanoid")
+end)
+
+_G.OBJ.STOP = function()
+    v39 = false
+    v40 = false
+    v41 = false
+    v42 = false
+    v110()
+end
+
+v32:Notify({
+    Title = "Loaded Successfully",
+    Content = "Part Controller Pro initialized",
+    Duration = 5,
+    Image = 4483362458
+})
